@@ -56,35 +56,57 @@ class _HomeScreenState extends State<HomeScreen> {
         itemCount: tasks.length,
         itemBuilder: (context, index) {
           return ListTile(
-            onLongPress: (){
-              showModalBottomSheet(context: context, builder: (context){
-                return Padding(
-                  padding: const EdgeInsets.all(18),
-                  child: Column(
-                    // mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text('Task Details',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 28,
-                          color: Colors.green
-                        ),
+            onLongPress: () {
+              showModalBottomSheet(
+                  context: context,
+                  builder: (context) {
+                    return Padding(
+                      padding: const EdgeInsets.all(18),
+                      child: Column(
+                        // mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Task Details',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 28,
+                                color: Colors.green),
+                          ),
+                          Text(
+                            'Title: ${tasks[index].title}',
+                            style: const TextStyle(
+                              fontSize: 18,
+                            ),
+                          ),
+                          Text(
+                            'Description: ${tasks[index].description}',
+                            style: const TextStyle(
+                              fontSize: 18,
+                            ),
+                          ),
+                          Text(
+                            'Deadline: ${tasks[index].deadline}',
+                            style: const TextStyle(
+                              fontSize: 18,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 24,
+                          ),
+                          ElevatedButton(
+                              onPressed: () {
+                                tasks.removeAt(index);
+                                Navigator.pop(context);
+                                if (mounted) {
+                                  setState(() {});
+                                }
+                              },
+                              child: const Text('Delete'))
+                        ],
                       ),
-                      Text('Title: ${tasks[index].title}', style: const TextStyle(
-                        fontSize: 18,
-                      ),
-                      ),
-                      Text('Description: ${tasks[index].description}', style: const TextStyle(
-                        fontSize: 18,
-                      ),),
-                      Text('Deadline: ${tasks[index].deadline}', style: const TextStyle(
-                        fontSize: 18,
-                      ),)
-                    ],
-                  ),
-                );
-              });
+                    );
+                  });
             },
             title: Text(tasks[index].title),
             subtitle: Text(tasks[index].description),
@@ -153,16 +175,26 @@ class _HomeScreenState extends State<HomeScreen> {
                       Expanded(
                           child: ElevatedButton(
                         onPressed: () {
-                          tasks.add(Task(
-                              _titleTextEditingController.text,
-                              _descriptionTextEditingController.text,
-                              _deadlineTextEditingController.text));
-                          _titleTextEditingController.clear();
-                          _descriptionTextEditingController.clear();
-                          _deadlineTextEditingController.clear();
-                          Navigator.pop(context);
-                          if (mounted) {
-                            setState(() {});
+                          if (_titleTextEditingController.text
+                                  .trim()
+                                  .isNotEmpty &&
+                              _descriptionTextEditingController.text
+                                  .trim()
+                                  .isNotEmpty &&
+                              _deadlineTextEditingController.text
+                                  .trim()
+                                  .isNotEmpty) {
+                            tasks.add(Task(
+                                _titleTextEditingController.text.trim(),
+                                _descriptionTextEditingController.text.trim(),
+                                _deadlineTextEditingController.text.trim()));
+                            _titleTextEditingController.clear();
+                            _descriptionTextEditingController.clear();
+                            _deadlineTextEditingController.clear();
+                            Navigator.pop(context);
+                            if (mounted) {
+                              setState(() {});
+                            }
                           }
                         },
                         child: const Text('Add Task'),
