@@ -38,9 +38,14 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   List<Task> tasks = [
     Task('Title', 'Description', '29 jun 2023'),
-    Task('Title', 'Description', '29 jun 2023'),
-    Task('Title', 'Description', '29 jun 2023'),
   ];
+  final TextEditingController _titleTextEditingController =
+      TextEditingController();
+  final TextEditingController _descriptionTextEditingController =
+      TextEditingController();
+  final TextEditingController _deadlineTextEditingController =
+      TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,20 +57,103 @@ class _HomeScreenState extends State<HomeScreen> {
         itemBuilder: (context, index) {
           return ListTile(
             title: Text(tasks[index].title),
-            subtitle:  Text(tasks[index].description),
+            subtitle: Text(tasks[index].description),
           );
         },
         separatorBuilder: (context, index) {
-          return Divider(
+          return const Divider(
             height: 0,
           );
         },
       ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
-        onPressed: (){},
+        onPressed: () {
+          showDialogBox();
+        },
       ),
     );
+  }
+
+  /// Dialog Box
+  void showDialogBox() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Expanded(
+            child: AlertDialog(
+              title: const Text('Add Tasks'),
+              content: Column(
+                children: [
+                  TextField(
+                    controller: _titleTextEditingController,
+                    decoration: const InputDecoration(
+                      hintText: 'Title',
+                      border: OutlineInputBorder(),
+                    ),
+                    textInputAction: TextInputAction.next,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  TextField(
+                    controller: _descriptionTextEditingController,
+                    keyboardType: TextInputType.text,
+                    decoration: const InputDecoration(
+                        hintText: 'Description', border: OutlineInputBorder()),
+                    maxLines: 5,
+                    textInputAction: TextInputAction.next,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  TextField(
+                    controller: _deadlineTextEditingController,
+                    decoration: const InputDecoration(
+                      hintText: 'Deadline',
+                      border: OutlineInputBorder(),
+                    ),
+                    textInputAction: TextInputAction.go,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                          child: ElevatedButton(
+                        onPressed: () {
+                          tasks.add(Task(
+                              _titleTextEditingController.text,
+                              _descriptionTextEditingController.text,
+                              _deadlineTextEditingController.text));
+                          _titleTextEditingController.clear();
+                          _descriptionTextEditingController.clear();
+                          _deadlineTextEditingController.clear();
+                          Navigator.pop(context);
+                          if (mounted) {
+                            setState(() {});
+                          }
+                        },
+                        child: const Text('Add Task'),
+                      )),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                          child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Cancel'),
+                      )),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          );
+        });
   }
 }
 
@@ -74,4 +162,3 @@ class Task {
   String title, description, deadline;
   Task(this.title, this.description, this.deadline);
 }
-
