@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      title: 'Task Manager',
+      title: 'Task Management',
       home: HomeScreen(),
     );
   }
@@ -50,12 +50,42 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home'),
+        title: const Text('Task Management'),
       ),
       body: ListView.separated(
         itemCount: tasks.length,
         itemBuilder: (context, index) {
           return ListTile(
+            onLongPress: (){
+              showModalBottomSheet(context: context, builder: (context){
+                return Padding(
+                  padding: const EdgeInsets.all(18),
+                  child: Column(
+                    // mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('Task Details',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 28,
+                          color: Colors.green
+                        ),
+                      ),
+                      Text('Title: ${tasks[index].title}', style: const TextStyle(
+                        fontSize: 18,
+                      ),
+                      ),
+                      Text('Description: ${tasks[index].description}', style: const TextStyle(
+                        fontSize: 18,
+                      ),),
+                      Text('Deadline: ${tasks[index].deadline}', style: const TextStyle(
+                        fontSize: 18,
+                      ),)
+                    ],
+                  ),
+                );
+              });
+            },
             title: Text(tasks[index].title),
             subtitle: Text(tasks[index].description),
           );
