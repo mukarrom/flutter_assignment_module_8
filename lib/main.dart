@@ -204,6 +204,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       Expanded(
                           child: ElevatedButton(
+                        focusNode: FocusNode(),
                         onPressed: () {
                           Navigator.pop(context);
                         },
